@@ -73,7 +73,7 @@ class ContatosController extends Controller
     public function excluir($dados)
     {
         $id      = (int) $dados['id'];
-        $contato = Contato::destroy($id);
+        Contato::destroy($id);
         return $this->listar();
     }
 }

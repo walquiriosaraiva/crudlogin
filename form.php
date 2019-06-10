@@ -1,5 +1,6 @@
 <div class="container">
-    <form action="?controller=ContatosController&<?php echo isset($contato->id) ? "method=atualizar&id={$contato->id}" : "method=salvar"; ?>" method="post" >
+    <form action="?controller=ContatosController&<?php echo isset($contato->id) ? "method=atualizar&id={$contato->id}" : "method=salvar"; ?>"
+          method="post">
         <div class="card" style="top:40px">
             <div class="card-header">
                 <span class="card-title">Contatos</span>
@@ -10,24 +11,31 @@
                 <label class="col-sm-2 col-form-label text-right">Nome:</label>
                 <input type="text" class="form-control col-sm-8" name="nome" id="nome" value="<?php
                 echo isset($contato->nome) ? $contato->nome : null;
-                ?>" />
+                ?>"/>
             </div>
             <div class="form-group form-row">
                 <label class="col-sm-2 col-form-label text-right">Telefone:</label>
                 <input type="text" class="form-control col-sm-8" name="telefone" id="telefone" value="<?php
                 echo isset($contato->telefone) ? $contato->telefone : null;
-                ?>" />
+                ?>"/>
             </div>
             <div class="form-group form-row">
                 <label class="col-sm-2 col-form-label text-right">Email:</label>
                 <input type="text" class="form-control col-sm-8" name="email" id="email" value="<?php
                 echo isset($contato->email) ? $contato->email : null;
-                ?>" />
+                ?>"/>
             </div>
             <div class="card-footer">
-                <input type="hidden" name="id" id="id" value="<?php echo isset($contato->id) ? $contato->id : null; ?>" />
+                <input type="hidden" name="id" id="id"
+                       value="<?php echo isset($contato->id) ? $contato->id : null; ?>"/>
                 <button class="btn btn-success" type="submit">Salvar</button>
-                <button class="btn btn-secondary">Limpar</button>
+                <?php
+                if (isset($contato) && $contato->id) { ?>
+                    <a class="btn btn-secondary"
+                       href="?controller=ContatosController&method=editar&id=<?php echo $contato->id; ?>">Limpar</a>
+                <?php } else { ?>
+                    <button class="btn btn-secondary" type="reset">Limpar</button>
+                <?php } ?>
                 <a class="btn btn-danger" href="?controller=ContatosController&method=listar">Cancelar</a>
             </div>
         </div>

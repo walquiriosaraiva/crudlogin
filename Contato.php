@@ -142,7 +142,9 @@ class Contato
     public static function find($id)
     {
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("SELECT * FROM contatos WHERE id='{$id}';");
+        //$stmt = $conexao->prepare("SELECT * FROM contatos WHERE id='{$id}';");
+        $stmt = $conexao->prepare("SELECT * FROM contatos WHERE id = ?");
+        $stmt->bindParam(1, $id);
         if ($stmt->execute()) {
             if ($stmt->rowCount() > 0) {
                 $resultado = $stmt->fetchObject('Contato');
@@ -161,7 +163,9 @@ class Contato
     public static function destroy($id)
     {
         $conexao = Conexao::getInstance();
-        if ($conexao->exec("DELETE FROM contatos WHERE id='{$id}';")) {
+        $stmt = $conexao->prepare("DELETE FROM contatos WHERE id = ?");
+        $stmt->bindParam(1, $id);
+        if ($stmt->execute()) {
             return true;
         }
         return false;

@@ -48,6 +48,10 @@ class Usuario
      */
     public function save()
     {
+        $password = new Password();
+        if ($this->atributos['senha']) {
+            $this->atributos['senha'] = $password->create($this->atributos['senha']);
+        }
         $colunas = $this->preparar($this->atributos);
         if (!isset($this->id)) {
             $query = "INSERT INTO usuario (" .
@@ -60,7 +64,7 @@ class Usuario
                     $definir[] = "{$key}={$value}";
                 }
             }
-            $query = "UPDATE contatos SET " . implode(', ', $definir) . " WHERE id='{$this->id}';";
+            $query = "UPDATE usuario SET " . implode(', ', $definir) . " WHERE id='{$this->id}';";
         }
         if ($conexao = Conexao::getInstance()) {
             $stmt = $conexao->prepare($query);
@@ -112,7 +116,7 @@ class Usuario
         $stmt = $conexao->prepare("SELECT * FROM usuario;");
         $result = array();
         if ($stmt->execute()) {
-            while ($rs = $stmt->fetchObject(Contato::class)) {
+            while ($rs = $stmt->fetchObject(Usuario::class)) {
                 $result[] = $rs;
             }
         }
@@ -142,7 +146,8 @@ class Usuario
     public static function find($id)
     {
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE id='{$id}';");
+        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE id = ?");
+        $stmt->bindParam(1, $id);
         if ($stmt->execute()) {
             if ($stmt->rowCount() > 0) {
                 $resultado = $stmt->fetchObject('Usuario');
@@ -161,7 +166,8 @@ class Usuario
     public static function findUsuario($usuario)
     {
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE usuario='{$usuario}';");
+        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE usuario = ?");
+        $stmt->bindParam(1, $usuario);
         if ($stmt->execute()) {
             if ($stmt->rowCount() > 0) {
                 $resultado = $stmt->fetchObject('Usuario');
@@ -180,7 +186,9 @@ class Usuario
     public static function destroy($id)
     {
         $conexao = Conexao::getInstance();
-        if ($conexao->exec("DELETE FROM usuario WHERE id='{$id}';")) {
+        $stmt = $conexao->prepare("DELETE FROM usuario WHERE id = ?");
+        $stmt->bindParam(1, $id);
+        if ($stmt->execute()) {
             return true;
         }
         return false;
