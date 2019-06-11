@@ -13,8 +13,11 @@ class ContatosController extends Controller
      */
     public function listar()
     {
-        $contatos = Contato::all();
-        return $this->view('grade', ['contatos' => $contatos]);
+        if ($_SESSION['crud']['login']) {
+            $contatos = Contato::all();
+            return $this->view('grade', ['contatos' => $contatos]);
+        }
+        return $this->view('login');
     }
 
     /**
@@ -22,7 +25,10 @@ class ContatosController extends Controller
      */
     public function criar()
     {
-        return $this->view('form');
+        if ($_SESSION['crud']['login']) {
+            return $this->view('form');
+        }
+        return $this->view('login');
     }
 
     /**
@@ -30,10 +36,13 @@ class ContatosController extends Controller
      */
     public function editar($dados)
     {
-        $id      = (int) $dados['id'];
-        $contato = Contato::find($id);
+        if ($_SESSION['crud']['login']) {
+            $id = (int)$dados['id'];
+            $contato = Contato::find($id);
 
-        return $this->view('form', ['contato' => $contato]);
+            return $this->view('form', ['contato' => $contato]);
+        }
+        return $this->view('login');
     }
 
     /**
@@ -41,15 +50,17 @@ class ContatosController extends Controller
      */
     public function salvar()
     {
-        $contato           = new Contato;
-        $contato->nome     = $this->request->nome;
-        $contato->telefone = $this->request->telefone;
-        $contato->email    = $this->request->email;
-        if ($contato->save()) {
-            return $this->listar();
+        if ($_SESSION['crud']['login']) {
+            $contato = new Contato;
+            $contato->nome = $this->request->nome;
+            $contato->telefone = $this->request->telefone;
+            $contato->email = $this->request->email;
+            if ($contato->save()) {
+                return $this->listar();
+            }
+            return true;
         }
-
-        return true;
+        return $this->view('login');
     }
 
     /**
@@ -57,14 +68,17 @@ class ContatosController extends Controller
      */
     public function atualizar($dados)
     {
-        $id                = (int) $dados['id'];
-        $contato           = Contato::find($id);
-        $contato->nome     = $this->request->nome;
-        $contato->telefone = $this->request->telefone;
-        $contato->email    = $this->request->email;
-        $contato->save();
+        if ($_SESSION['crud']['login']) {
+            $id = (int)$dados['id'];
+            $contato = Contato::find($id);
+            $contato->nome = $this->request->nome;
+            $contato->telefone = $this->request->telefone;
+            $contato->email = $this->request->email;
+            $contato->save();
 
-        return $this->listar();
+            return $this->listar();
+        }
+        return $this->view('login');
     }
 
     /**
@@ -72,8 +86,11 @@ class ContatosController extends Controller
      */
     public function excluir($dados)
     {
-        $id      = (int) $dados['id'];
-        Contato::destroy($id);
-        return $this->listar();
+        if ($_SESSION['crud']['login']) {
+            $id = (int)$dados['id'];
+            Contato::destroy($id);
+            return $this->listar();
+        }
+        return $this->view('login');
     }
 }

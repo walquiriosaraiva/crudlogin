@@ -52,7 +52,7 @@ if (isset($_GET) && $_GET) {
     <h1>CRUD</h1>
     <hr>
     <div class="container">
-        Bem-vindo ao sistema! <?php echo $_SESSION['crud']['login']['usuario']; ?><br/><br/>
+        Bem-vindo ao sistema! <strong><?php echo $_SESSION['crud']['login']['usuario']; ?></strong><br/><br/>
         <a href="?controller=ContatosController&method=listar" class="btn btn-success">Modulo de contatos</a>
         <a href="?controller=UsuarioController&method=listar" class="btn btn-success">Modulo de usuário</a>
         <a href="?controller=UsuarioController&method=logout" class="btn btn-danger">Sair</a></div>
