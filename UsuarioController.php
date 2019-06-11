@@ -119,17 +119,19 @@ class UsuarioController extends Controller
     {
         if ($this->request->usuario && $this->request->senha) {
             $usuario = Usuario::findUsuario($this->request->usuario);
-            $hash = $usuario->senha;
-            $password = new Password();
-            if ($password->verify($this->request->senha, $hash)) {
-                $_SESSION['crud']['login'] = array(
-                    'id' => $usuario->id,
-                    'usuario' => $usuario->usuario,
-                    'cadastro' => $usuario->cadastro,
-                    'email' => $usuario->email,
-                    'tipo' => $usuario->tipo);
-                $this->sessao = $_SESSION['crud']['login'];
-                return $this->listar();
+            if ($usuario) {
+                $hash = $usuario->senha;
+                $password = new Password();
+                if ($password->verify($this->request->senha, $hash)) {
+                    $_SESSION['crud']['login'] = array(
+                        'id' => $usuario->id,
+                        'usuario' => $usuario->usuario,
+                        'cadastro' => $usuario->cadastro,
+                        'email' => $usuario->email,
+                        'tipo' => $usuario->tipo);
+                    $this->sessao = $_SESSION['crud']['login'];
+                    return $this->listar();
+                }
             }
         }
         return $this->view('login', ['retorno' => array('erro' => 'Usuário ou senha inválido')]);
