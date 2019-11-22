@@ -13,10 +13,11 @@ class ContatosController extends Controller
      */
     public function listar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $contatos = Contato::all();
             return $this->view('grade', ['contatos' => $contatos]);
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -25,9 +26,10 @@ class ContatosController extends Controller
      */
     public function criar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             return $this->view('form');
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -36,12 +38,13 @@ class ContatosController extends Controller
      */
     public function editar($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
             $contato = Contato::find($id);
 
             return $this->view('form', ['contato' => $contato]);
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -50,16 +53,17 @@ class ContatosController extends Controller
      */
     public function salvar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $contato = new Contato;
             $contato->nome = $this->request->nome;
             $contato->telefone = $this->request->telefone;
             $contato->email = $this->request->email;
-            if ($contato->save()) {
+            if ($contato->save()) :
                 return $this->listar();
-            }
+            endif;
             return true;
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -68,7 +72,7 @@ class ContatosController extends Controller
      */
     public function atualizar($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
             $contato = Contato::find($id);
             $contato->nome = $this->request->nome;
@@ -77,7 +81,8 @@ class ContatosController extends Controller
             $contato->save();
 
             return $this->listar();
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -86,11 +91,12 @@ class ContatosController extends Controller
      */
     public function excluir($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
             Contato::destroy($id);
             return $this->listar();
-        }
+        endif;
+
         return $this->view('login');
     }
 }

@@ -30,12 +30,12 @@
                        value="<?php echo isset($contato->id) ? $contato->id : null; ?>"/>
                 <button class="btn btn-success" type="submit">Salvar</button>
                 <?php
-                if (isset($contato) && $contato->id) { ?>
+                if (isset($contato) && $contato->id) : ?>
                     <a class="btn btn-secondary"
                        href="?controller=ContatosController&method=editar&id=<?php echo $contato->id; ?>">Limpar</a>
-                <?php } else { ?>
+                <?php else : ?>
                     <button class="btn btn-secondary" type="reset">Limpar</button>
-                <?php } ?>
+                <?php endif; ?>
                 <a class="btn btn-danger" href="?controller=ContatosController&method=listar">Cancelar</a>
             </div>
         </div>

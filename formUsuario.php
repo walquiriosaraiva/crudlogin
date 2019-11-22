@@ -49,12 +49,12 @@
                        value="<?php echo isset($usuario->id) ? $usuario->id : null; ?>"/>
                 <button class="btn btn-success" type="submit">Salvar</button>
                 <?php
-                if (isset($usuario) && $usuario->id) { ?>
+                if (isset($usuario) && $usuario->id) : ?>
                     <a class="btn btn-secondary"
                        href="?controller=UsuarioController&method=editar&id=<?php echo $usuario->id; ?>">Limpar</a>
-                <?php } else { ?>
+                <?php else : ?>
                     <button class="btn btn-secondary" type="reset">Limpar</button>
-                <?php } ?>
+                <?php endif; ?>
                 <a class="btn btn-danger" href="?controller=UsuarioController&method=listar">Cancelar</a>
             </div>
         </div>

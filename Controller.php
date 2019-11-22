@@ -23,11 +23,11 @@ class Controller
      */
     public function view($arquivo, $array = null)
     {
-        if (!is_null($array)) {
-            foreach ($array as $var => $value) {
+        if (!is_null($array)) :
+            foreach ($array as $var => $value) :
                 ${$var} = $value;
-            }
-        }
+            endforeach;
+        endif;
         ob_start();
         include "{$arquivo}.php";
         ob_flush();

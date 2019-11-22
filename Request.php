@@ -23,9 +23,9 @@ class Request
      */
     public function __get($nome)
     {
-        if (isset($this->request[$nome])) {
+        if (isset($this->request[$nome])) :
             return $this->request[$nome];
-        }
+        endif;
         return false;
     }
 }

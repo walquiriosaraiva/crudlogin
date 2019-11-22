@@ -49,29 +49,31 @@ class Usuario
     public function save()
     {
         $password = new Password();
-        if ($this->atributos['senha']) {
+        if ($this->atributos['senha']) :
             $this->atributos['senha'] = $password->create($this->atributos['senha']);
-        }
+        endif;
+
         $colunas = $this->preparar($this->atributos);
-        if (!isset($this->id)) {
+        if (!isset($this->id)) :
             $query = "INSERT INTO usuario (" .
                 implode(', ', array_keys($colunas)) .
                 ") VALUES (" .
                 implode(', ', array_values($colunas)) . ");";
-        } else {
-            foreach ($colunas as $key => $value) {
-                if ($key !== 'id') {
+        else :
+            foreach ($colunas as $key => $value) :
+                if ($key !== 'id') :
                     $definir[] = "{$key}={$value}";
-                }
-            }
+                endif;
+            endforeach;
             $query = "UPDATE usuario SET " . implode(', ', $definir) . " WHERE id='{$this->id}';";
-        }
-        if ($conexao = Conexao::getInstance()) {
+        endif;
+
+        if ($conexao = Conexao::getInstance()) :
             $stmt = $conexao->prepare($query);
-            if ($stmt->execute()) {
+            if ($stmt->execute()) :
                 return $stmt->rowCount();
-            }
-        }
+            endif;
+        endif;
         return false;
     }
 
@@ -81,15 +83,15 @@ class Usuario
      */
     private function escapar($dados)
     {
-        if (is_string($dados) & !empty($dados)) {
+        if (is_string($dados) & !empty($dados)) :
             return "'" . addslashes($dados) . "'";
-        } elseif (is_bool($dados)) {
+        elseif (is_bool($dados)) :
             return $dados ? 'TRUE' : 'FALSE';
-        } elseif ($dados !== '') {
+        elseif ($dados !== '') :
             return $dados;
-        } else {
+        else :
             return 'NULL';
-        }
+        endif;
     }
 
     /**
@@ -99,11 +101,11 @@ class Usuario
     private function preparar($dados)
     {
         $resultado = array();
-        foreach ($dados as $k => $v) {
-            if (is_scalar($v)) {
+        foreach ($dados as $k => $v) :
+            if (is_scalar($v)) :
                 $resultado[$k] = $this->escapar($v);
-            }
-        }
+            endif;
+        endforeach;
         return $resultado;
     }
 
@@ -115,14 +117,16 @@ class Usuario
         $conexao = Conexao::getInstance();
         $stmt = $conexao->prepare("SELECT * FROM usuario;");
         $result = array();
-        if ($stmt->execute()) {
-            while ($rs = $stmt->fetchObject(Usuario::class)) {
+        if ($stmt->execute()) :
+            while ($rs = $stmt->fetchObject(Usuario::class)) :
                 $result[] = $rs;
-            }
-        }
-        if (count($result) > 0) {
+            endwhile;
+        endif;
+
+        if (count($result) > 0) :
             return $result;
-        }
+        endif;
+
         return false;
     }
 
@@ -133,9 +137,9 @@ class Usuario
     {
         $conexao = Conexao::getInstance();
         $count = $conexao->exec("SELECT count(*) FROM usuario;");
-        if ($count) {
+        if ($count) :
             return (int)$count;
-        }
+        endif;
         return false;
     }
 
@@ -148,14 +152,14 @@ class Usuario
         $conexao = Conexao::getInstance();
         $stmt = $conexao->prepare("SELECT * FROM usuario WHERE id = ?");
         $stmt->bindParam(1, $id);
-        if ($stmt->execute()) {
-            if ($stmt->rowCount() > 0) {
+        if ($stmt->execute()) :
+            if ($stmt->rowCount() > 0) :
                 $resultado = $stmt->fetchObject('Usuario');
-                if ($resultado) {
+                if ($resultado) :
                     return $resultado;
-                }
-            }
-        }
+                endif;
+            endif;
+        endif;
         return false;
     }
 
@@ -166,16 +170,16 @@ class Usuario
     public static function findUsuario($usuario)
     {
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE usuario = ?");
-        $stmt->bindParam(1, $usuario);
-        if ($stmt->execute()) {
-            if ($stmt->rowCount() > 0) {
+        $stmt = $conexao->prepare("SELECT * FROM usuario WHERE usuario = :usuario");
+        $stmt->bindParam('usuario', $usuario);
+        if ($stmt->execute()) :
+            if ($stmt->rowCount() > 0) :
                 $resultado = $stmt->fetchObject('Usuario');
-                if ($resultado) {
+                if ($resultado) :
                     return $resultado;
-                }
-            }
-        }
+                endif;
+            endif;
+        endif;
         return false;
     }
 
@@ -186,11 +190,12 @@ class Usuario
     public static function destroy($id)
     {
         $conexao = Conexao::getInstance();
-        $stmt = $conexao->prepare("DELETE FROM usuario WHERE id = ?");
-        $stmt->bindParam(1, $id);
-        if ($stmt->execute()) {
+        $stmt = $conexao->prepare("DELETE FROM usuario WHERE id = :id");
+        $stmt->bindParam('id', $id);
+        if ($stmt->execute()) :
             return true;
-        }
+        endif;
+
         return false;
     }
 }

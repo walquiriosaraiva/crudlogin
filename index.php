@@ -28,27 +28,27 @@ spl_autoload_register(function ($class) {
 
 <?php
 
-if (isset($_GET) && $_GET) {
-    $controller = isset($_GET['controller']) ? ((class_exists($_GET['controller'])) ? new $_GET['controller'] : NULL) : null;
+if (isset($_GET) && $_GET) :
+    $controller = isset($_GET['controller']) ? ((class_exists($_GET['controller'])) ? new $_GET['controller'] : null) : null;
     $method = isset($_GET['method']) ? $_GET['method'] : null;
 
-    if ($controller && $method) {
-        if (method_exists($controller, $method)) {
+    if ($controller && $method) :
+        if (method_exists($controller, $method)) :
             $parameters = $_GET;
             unset($parameters['controller']);
             unset($parameters['method']);
             call_user_func(array($controller, $method), $parameters);
-        } else {
+        else :
             echo "Método não encontrado!";
-        }
-    } else {
+        endif;
+    else :
         ?>
         <div class="container">
             Controller não encontrado!<br/><br/>
             <a href="?controller=UsuarioController&method=listar" class="btn btn-success">Home</a></div>
-        <?php
-    }
-} else if (isset($_SESSION['crud']) && $_SESSION['crud']['login']) { ?>
+    <?php
+    endif;
+elseif (isset($_SESSION['crud']) && $_SESSION['crud']['login']) : ?>
     <h1>CRUD</h1>
     <hr>
     <div class="container">
@@ -56,12 +56,11 @@ if (isset($_GET) && $_GET) {
         <a href="?controller=ContatosController&method=listar" class="btn btn-success">Modulo de contatos</a>
         <a href="?controller=UsuarioController&method=listar" class="btn btn-success">Modulo de usuário</a>
         <a href="?controller=UsuarioController&method=logout" class="btn btn-danger">Sair</a></div>
-    <?php
-} else {
+<?php
+else :
     header("Location: ?controller=UsuarioController&method=login");
-}
+endif;
 ?>
-
 
 </body>
 </html>

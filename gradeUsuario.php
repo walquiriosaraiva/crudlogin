@@ -23,14 +23,13 @@ endif;
         </thead>
         <tbody>
         <?php
-        if (isset($usuario) && $usuario) {
-            foreach ($usuario as $usuarios) {
-                if($usuarios->cadastro) {
+        if (isset($usuario) && $usuario) :
+            foreach ($usuario as $usuarios) :
+                if ($usuarios->cadastro) :
                     $data = new DateTime($usuarios->cadastro);
-                }
-                else{
+                else:
                     $data = new DateTime(date('Y-m-d'));
-                }
+                endif;
 
                 ?>
                 <tr>
@@ -45,15 +44,15 @@ endif;
                            class="btn btn-danger btn-sm">Excluir</a>
                     </td>
                 </tr>
-                <?php
-            }
-        } else {
+            <?php
+            endforeach;
+        else :
             ?>
             <tr>
                 <td colspan="5">Nenhum registro encontrado</td>
             </tr>
-            <?php
-        }
+        <?php
+        endif;
         ?>
         </tbody>
     </table>

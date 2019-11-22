@@ -12,10 +12,10 @@ class UsuarioController extends Controller
      */
     public function listar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $usuario = Usuario::all();
             return $this->view('gradeUsuario', ['usuario' => $usuario]);
-        }
+        endif;
 
         return $this->view('login');
     }
@@ -25,9 +25,10 @@ class UsuarioController extends Controller
      */
     public function criar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             return $this->view('formUsuario');
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -36,11 +37,12 @@ class UsuarioController extends Controller
      */
     public function editar($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
             $usuario = Usuario::find($id);
             return $this->view('formUsuario', ['usuario' => $usuario]);
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -49,17 +51,18 @@ class UsuarioController extends Controller
      */
     public function salvar()
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $usuario = new Usuario;
             $usuario->usuario = $this->request->usuario;
             $usuario->senha = $this->request->senha;
             $usuario->email = $this->request->email;
             $usuario->tipo = $this->request->tipo;
-            if ($usuario->save()) {
+            if ($usuario->save()) :
                 return $this->listar();
-            }
+            endif;
             return true;
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -68,19 +71,19 @@ class UsuarioController extends Controller
      */
     public function atualizar($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
             $usuario = Usuario::find($id);
             $usuario->usuario = $this->request->usuario;
-            if ($this->request->senha) {
+            if ($this->request->senha) :
                 $usuario->senha = $this->request->senha;
-            }
+            endif;
             $usuario->email = $this->request->email;
             $usuario->tipo = $this->request->tipo;
             $usuario->save();
-
             return $this->listar();
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -89,18 +92,18 @@ class UsuarioController extends Controller
      */
     public function excluir($dados)
     {
-        if ($_SESSION['crud']['login']) {
+        if ($_SESSION['crud']['login']) :
             $id = (int)$dados['id'];
-
-            foreach ($_SESSION['crud']['login'] as $sessao) {
-                if (isset($sessao['id']) && $sessao['id'] == $id) {
+            foreach ($_SESSION['crud']['login'] as $sessao) :
+                if (isset($sessao['id']) && $sessao['id'] == $id) :
                     $usuario = Usuario::all();
                     return $this->view('gradeUsuario', ['retorno' => array('erro' => 'Usuário não pode excluir a se mesmo'), 'usuario' => $usuario]);
-                }
-            }
+                endif;
+            endforeach;
             Usuario::destroy($id);
             return $this->listar();
-        }
+        endif;
+
         return $this->view('login');
     }
 
@@ -117,12 +120,12 @@ class UsuarioController extends Controller
      */
     public function acessar()
     {
-        if ($this->request->usuario && $this->request->senha) {
+        if ($this->request->usuario && $this->request->senha) :
             $usuario = Usuario::findUsuario($this->request->usuario);
-            if ($usuario) {
+            if ($usuario) :
                 $hash = $usuario->senha;
                 $password = new Password();
-                if ($password->verify($this->request->senha, $hash)) {
+                if ($password->verify($this->request->senha, $hash)) :
                     $_SESSION['crud']['login'] = array(
                         'id' => $usuario->id,
                         'usuario' => $usuario->usuario,
@@ -131,9 +134,10 @@ class UsuarioController extends Controller
                         'tipo' => $usuario->tipo);
                     $this->sessao = $_SESSION['crud']['login'];
                     return $this->listar();
-                }
-            }
-        }
+                endif;
+            endif;
+        endif;
+
         return $this->view('login', ['retorno' => array('erro' => 'Usuário ou senha inválido')]);
     }
 
